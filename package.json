@@ -1,0 +1,23 @@
+{
+  "name": "grants-ui",
+  "version": "0.0.1",
+  "description": "Control UI for Grants entitlements engine",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/d3m1urg/grants-ui.git"
+  },
+  "keywords": [
+    "grants",
+    "ui"
+  ],
+  "author": "Ilya Sharonov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/d3m1urg/grants-ui/issues"
+  },
+  "homepage": "https://github.com/d3m1urg/grants-ui#readme"
+}
