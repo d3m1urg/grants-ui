@@ -1,1 +1,1 @@
-Admin UI for Grants entitlements engine
+Control UI for Grants entitlements engine
