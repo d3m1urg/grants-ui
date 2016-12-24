@@ -6,7 +6,8 @@
         "import"
     ],
     "rules": {
-      "react/prefer-stateless-function": "off",
+      "react/prefer-stateless-function": [0],
+      "react/prefer-es6-class": [1, "always"],
       "react/forbid-prop-types": "off",
       "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
     }
