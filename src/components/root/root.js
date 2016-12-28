@@ -1,15 +1,30 @@
-import React, { Component, PropTypes } from 'react';
+import React from 'react';
+import Drawer from 'material-ui/Drawer';
 
 import './root.css';
 
-class Root extends Component {
+export default class Root extends React.Component {
 
   render() {
     return (
-      <div className="row center-xs middle-xs">
-        <div className="col-xs-6">
-          <div className="box">
-            <span>Root component</span>
+      <div>
+        <Drawer
+          open={this.props.open}
+          onRequestChange={this.props.onMenuClick}
+          docked={false} />
+        <div className="root-container">
+          <div className="header-bar">
+            {this.props.appBar}
+          </div>
+          <div className="main">
+            <div className="root-container">
+              <div className="header-bar">
+                {this.props.toolBar}
+              </div>
+              <div className="main">
+                {this.props.mainArea}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -18,4 +33,5 @@ class Root extends Component {
 
 }
 
-export default Root;
+Root.propTypes = {
+};
