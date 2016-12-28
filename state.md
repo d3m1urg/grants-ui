@@ -14,3 +14,7 @@ Whole state is held in Immutable.js global object and operated over using Redux 
 }
 
 State is propagated to stateful components which represent different app entities; all other components are controlled by stateful components.
+
+Create intelligent root reducer instead of built-in combineReducers, which:
+- is too dumb, calls all the reducers it gets
+- can not handle Immutable.js structures correctly

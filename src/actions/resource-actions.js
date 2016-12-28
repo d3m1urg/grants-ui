@@ -8,32 +8,32 @@ export function addResource(schema) {
   return {
     type: ADD_RESOURCE,
     schema,
-  }
+  };
 }
 
 export function removeResource(name) {
   return {
     type: REMOVE_RESOURCE,
     name,
-  }
+  };
 }
 
 export function listResources() {
   return {
     type: LIST_RESOURCES,
-  }
+  };
 }
 
 export function getResource(name) {
   return {
     type: GET_RESOURCE,
     name,
-  }
+  };
 }
 
 export function updateResource(schema) {
   return {
     type: UPDATE_RESOURCE,
     schema,
-  }
+  };
 }

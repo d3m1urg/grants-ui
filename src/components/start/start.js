@@ -1,8 +1,6 @@
 import React from 'react';
 
-
 import Root from '../root/root';
-import AppBar from '../app-bar/app-bar';
 import ToolBar from '../toolbar/toolbar';
 
 export default class Start extends React.Component {
@@ -24,9 +22,7 @@ export default class Start extends React.Component {
   render() {
     return (
       <div>
-        <Root appBar={<AppBar onMenuClick={this.onMenuClick} />}
-              toolBar={<ToolBar />}
-              onMenuClick={this.onMenuClick}
+        <Root onMenuClick={this.onMenuClick}
               open={this.state.sideMenuVisible} />
       </div>
     );
