@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Root from '../root/root';
+import ConnectRoot from '../root/connect-root';
 import ToolBar from '../toolbar/toolbar';
 
 export default class Start extends React.Component {
@@ -22,8 +22,7 @@ export default class Start extends React.Component {
   render() {
     return (
       <div>
-        <Root onMenuClick={this.onMenuClick}
-              open={this.state.sideMenuVisible} />
+        <ConnectRoot />
       </div>
     );
   }
