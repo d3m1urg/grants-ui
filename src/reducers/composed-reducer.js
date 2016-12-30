@@ -1,4 +1,4 @@
-import Immutable from 'immutable';
+import { fromJS, Set as ISet } from 'immutable';
 import { reducers as uiReducers } from './ui-reducers';
 
 const redKey = {
@@ -9,44 +9,55 @@ const valKey = {
   valueOf: '$valKey$',
 };
 
-let initialState = Immutable.fromJS({});
+let initialState = fromJS({});
+
+function traceback(cursor, state) {
+  if (cursor.length === 1) {
+    return state;
+  }
+  const trace = [...cursor];
+  let fnSet = state.getIn([...cursor, redKey]);
+  while (trace.length > 0) {
+    trace.pop();
+    const reducers = state.getIn([...trace, redKey], null);
+    if (reducers) {
+      for (const fn of reducers.values()) {
+        if (fn.listenChildren) {
+          fnSet = fnSet.add(fn);
+        }
+      }
+    }
+  }
+  return state.setIn([...cursor, redKey], fnSet);
+}
+
+function sortByCursorLength(a, b) {
+  if (a.cursor.length < b.cursor.length) return -1;
+  if (a.cursor.length > b.cursor.length) return 1;
+  return 0;
+}
 
 (function initReducers() {
-  uiReducers.forEach((reducer) => {
+  const redds = [...uiReducers];
+  redds.sort(sortByCursorLength).forEach((reducer) => {
     const fnPath = [...reducer.cursor, redKey];
     let fnSet = initialState.getIn(fnPath, null);
     if (!fnSet) {
-      fnSet = Immutable.Set();
+      fnSet = ISet();
     }
     fnSet = fnSet.add(reducer.fn);
     initialState = initialState.setIn(fnPath, fnSet);
     if (reducer.hasOwnProperty('init')) {
       initialState = initialState.setIn([...reducer.cursor, valKey], reducer.init);
     }
+    initialState = traceback(reducer.cursor, initialState);
   });
 }());
 
-/*function hydrateState(state) {
-}*/
-
 export function trieducer(state = initialState, action) {
   if (action.cursor) {
-    const path = [];
-    const subscribed = [];
-    for (let i = 0; i < action.cursor.length - 1; i++) {
-      path.push(action.cursor[i]);
-      const reducers = state.getIn([...path, redKey], null);
-      if (reducers) {
-        for (const fn of reducers.values()) {
-          if (fn.listenChildren) {
-            subscribed.push(fn);
-          }
-        }
-      }
-    }
-    const reducers = [...state.getIn([...action.cursor, redKey], []), ...subscribed];
-    const st = reducers.reduce((newState, nextReducer) => nextReducer(newState, action), state);
-    return st;
+    const reducers = [...state.getIn([...action.cursor, redKey], [])];
+    return reducers.reduce((newState, nextReducer) => nextReducer(newState, action), state);
   }
   return state;
 }

@@ -7,10 +7,10 @@ import { trieducer } from './reducers/composed-reducer';
 
 // import 'flexboxgrid/dist/flexboxgrid.css';
 
-import App from './components/app';
+import AppContainer from './components/app-container';
 
 injectTapEventPlugin();
 
 const store = createStore(trieducer);
 
-render(<Provider store={store}><App /></Provider>, document.getElementById('app'));
+render(<Provider store={store}><AppContainer /></Provider>, document.getElementById('app'));

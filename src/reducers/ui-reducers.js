@@ -1,28 +1,31 @@
 import { get, set } from './composed-reducer';
 
-export const TOGGLE_MENU = ['ui', 'root', 'sideMenuOpen'];
+import { TOGGLE_MENU_ACTION } from '../actions/ui-actions';
+
+const { CURSOR: TOGGLE_MENU_CURSOR } = TOGGLE_MENU_ACTION;
 
 function toggleSideMenu(state, action) {
-  const currentMenuState = get(state, TOGGLE_MENU, false);
-  return set(state, TOGGLE_MENU, !currentMenuState);
+  const currentMenuState = get(state, action.cursor, false);
+  return set(state, action.cursor, !currentMenuState);
 }
 
 toggleSideMenu.listenChildren = false;
 
-function testRootListener(state, action) {
-  console.log(`got the action from ${action.cursor}`);
+function testChildListener(state, action) {
+  console.log(`heard from ${action.cursor}`);
   return state;
 }
-testRootListener.listenChildren = true;
+
+testChildListener.listenChildren = true;
 
 export const reducers = [
   {
-    cursor: TOGGLE_MENU,
+    cursor: TOGGLE_MENU_CURSOR,
     fn: toggleSideMenu,
     init: false,
   },
   {
     cursor: ['ui'],
-    fn: testRootListener,
+    fn: testChildListener,
   },
 ];

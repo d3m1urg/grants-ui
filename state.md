@@ -24,3 +24,5 @@ My implementation define that the whole state is passed to every reducer which i
 As a side-effect of making reducers compose the initial state is that initial state is decomposed by defualt between them and is therefore easily updateable through reducers update.
 
 Action types may me used as aliases to state tree nodes.
+
+Due to Redux implementation details it's reasonable to move cursors to actions completely and use "type" as an alias to "cursor" to generate correct actions.

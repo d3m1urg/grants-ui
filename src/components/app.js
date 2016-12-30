@@ -2,7 +2,8 @@ import React from 'react';
 import { Router, Route, browserHistory } from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import Start from './start/start';
+import StartContainer from './start/start-container';
+import Resource from './resource/resource';
 
 export default class App extends React.Component {
 
@@ -10,7 +11,8 @@ export default class App extends React.Component {
     return (
       <MuiThemeProvider>
         <Router history={browserHistory}>
-          <Route path="/" component={Start} />
+          <Route path="/" component={StartContainer} />
+          <Route path="/resource" component={Resource} />
         </Router>
       </MuiThemeProvider>
     );
