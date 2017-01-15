@@ -1,0 +1,23 @@
+.create-resource {
+
+  &-container {
+    display: flex;
+    flex-flow: row wrap;
+  }
+
+  &-toolbar {
+    flex: 1 1 100%;
+    color: #ff0000;
+  }
+
+  &-left-panel {
+    flex: 1 1 33%;
+    color: #00ff00;
+  }
+  
+  &-center-panel {
+    flex: 2 1 67%;
+    color: #0000ff;
+  }
+
+}
