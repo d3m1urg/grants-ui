@@ -4,7 +4,6 @@ $input-bgcolor: #ffffff;
 $tag-marked: #ff0000;
 
 .tagbox-internal {
-  margin: 0.5rem 0.5rem 0.5rem 0;
   padding: 0.5rem;
 }
 
@@ -17,22 +16,6 @@ $tag-marked: #ff0000;
     align-items: center;
     align-content: flex-start;
     min-height: 3.5rem;
-  }
-
-  &-container:first-child {
-    margin-left: 0.5rem;
-  }
-
-  &-tag {
-    @extend .tagbox-internal;
-    flex: 0 1 auto;
-    color: $tag-color;
-    background-color: $tag-bgcolor;
-    border-radius: 0.3rem;
-  }
-
-  &-tag-marked {
-    background-color: $tag-marked;
   }
 
   &-input-container {

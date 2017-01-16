@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Chip from 'material-ui/Chip';
+
 export default class Tag extends React.Component {
 
   constructor(props) {
@@ -13,11 +15,12 @@ export default class Tag extends React.Component {
 
   render() {
     return (
-      <div className={this.props.tagClass}>
-        <div style={{ display: 'flex', alignItems: 'center', color: '#ffffff' }}>
+      <div className="tagbox-internal">
+        <Chip
+          onRequestDelete={this.onRemovePressed}
+          backgroundColor={this.props.tagMarked ? 'rgb(255,0,0)' : undefined}>
           {this.props.tagContent}
-          <span className="tagbox-close" onClick={this.onRemovePressed}>&times;</span>
-        </div>
+        </Chip>
       </div>
     );
   }
@@ -25,8 +28,8 @@ export default class Tag extends React.Component {
 
 Tag.propTypes = {
   tagId: React.PropTypes.number.isRequired,
-  tagClass: React.PropTypes.string.isRequired,
   tagContent: React.PropTypes.string.isRequired,
+  tagMarked: React.PropTypes.bool,
   onRemovePressed: React.PropTypes.func.isRequired,
 };
 

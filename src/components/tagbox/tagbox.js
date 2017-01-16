@@ -1,5 +1,6 @@
 import React from 'react';
-import classnames from 'classnames';
+
+import AutoComplete from 'material-ui/AutoComplete';
 
 import Tag from './tag';
 
@@ -9,61 +10,91 @@ export default class Tagbox extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      data: [],
-      marked: false,
-    };
+    this.state = Object.assign({}, props);
     this.onKeyDown = this.onKeyDown.bind(this);
     this.onRemoveTag = this.onRemoveTag.bind(this);
+    this.onNewRequest = this.onNewRequest.bind(this);
+    this.filter = this.filter.bind(this);
+    this.onUpdateInput = this.onUpdateInput.bind(this);
   }
 
   onKeyDown(event) {
-    const value = this.tagInput.value;
     switch (event.keyCode) {
-      case 13:
-        if (value) {
-          const data = [...this.state.data, { tagClass: 'tagbox-tag', tagContent: value }];
-          this.tagInput.value = '';
-          this.setState({ data, marked: false });
-        }
-        break;
       case 8:
-        if (!value) {
-          if (this.state.marked && this.state.data.length > 0) {
-            this.onRemoveTag(this.state.data.length - 1);
+        if (!this.state.currentInput && this.state.selectedTags.length > 0) {
+          if (this.state.markedForDelete) {
+            this.removeTag(this.state.selectedTags.length - 1);
           } else {
-            this.setState({ marked: true });
+            this.setState({ markedForDelete: true });
           }
         }
         break;
+      case 40:
+        if (!this.state.currentInput || this.state.currentInput.length === 0) {
+          this.setState({ openMenu: true, error: '' });
+        }
+        break;
       default:
-        if (this.state.marked) {
-          this.setState({ marked: false });
+        if (this.state.markedForDelete) {
+          this.setState({ markedForDelete: false });
+        }
+        if (this.state.error) {
+          this.setState({ error: '' });
         }
         break;
     }
   }
 
+  filter(input, key) {
+    if (this.state.openMenu) {
+      return true;
+    }
+    return input !== '' && key.indexOf(input) !== -1;
+  }
+
+  onNewRequest(request, index) {
+    if (index >= 0) {
+      const updSelectedTags = [...this.state.selectedTags, index];
+      this.setState({ selectedTags: updSelectedTags, currentInput: '', error: '', markedForDelete: false, openMenu: false });
+      if (this.inputField) {
+        this.inputField.focus();
+      }
+      return;
+    }
+    const foundIndex = this.props.dataSource.findIndex(item => item[this.props.dataSourceConfig.text] === request);
+    if (foundIndex >= 0) {
+      this.onNewRequest(this.props.dataSource[foundIndex], foundIndex);
+    } else {
+      this.setState({ error: 'Invalid input' });
+    }
+  }
+
+  onUpdateInput(input) {
+    this.setState({ currentInput: input });
+  }
+
+  removeTag(id) {
+    const selectedTags = [...this.state.selectedTags];
+    selectedTags.splice(id, 1);
+    this.setState({ selectedTags });
+  }
+
   onRemoveTag(id) {
-    const data = [...this.state.data];
-    data.splice(id, 1);
-    this.setState({ data });
-    this.tagInput.focus();
+    this.setState({ markedForDelete: false });
+    this.removeTag(id);
+    if (this.inputField) {
+      this.inputField.focus();
+    }
   }
 
   renderTags() {
-    return this.state.data.map((tag, index, array) => {
-      const tagClass = classnames({
-        'tagbox-tag': true,
-        'tagbox-tag-marked': this.state.marked && index === array.length - 1,
-      });
-      return (<Tag
-        tagClass={tagClass}
-        tagContent={tag.tagContent}
+    return this.state.selectedTags.map((tagIndex, index, array) =>
+      (<Tag
+        tagContent={this.props.dataSource[tagIndex].tagContent}
         tagId={index}
+        tagMarked={this.state.markedForDelete && index === array.length - 1}
         onRemovePressed={this.onRemoveTag}
-        key={index} />);
-    });
+        key={index} />));
   }
 
   render() {
@@ -71,10 +102,20 @@ export default class Tagbox extends React.Component {
       <div className="tagbox-container">
         {this.renderTags()}
         <div className="tagbox-input-container">
-          <input
-            className="tagbox-input"
+          <AutoComplete
             onKeyDown={this.onKeyDown}
-            ref={(input) => { this.tagInput = input; }} />
+            onNewRequest={this.onNewRequest}
+            onUpdateInput={this.onUpdateInput}
+            dataSource={this.props.dataSource}
+            dataSourceConfig={this.props.dataSourceConfig}
+            name={this.props.name}
+            open={this.state.openMenu}
+            filter={this.filter}
+            menuCloseDelay={0}
+            searchText={this.state.currentInput}
+            errorText={this.state.error}
+            fullWidth
+            ref={(elem) => { this.inputField = elem ? elem.refs.searchTextField : null; }} />
         </div>
       </div>
     );
@@ -82,4 +123,13 @@ export default class Tagbox extends React.Component {
 }
 
 Tagbox.propTypes = {
+};
+
+Tagbox.defaultProps = {
+  dataSource: [],
+  dataSourceConfig: { text: 'tagText', value: 'tagValue' },
+  name: 'tagboxInput',
+  selectedTags: [],
+  markedForDelete: false,
+  openMenu: false,
 };
