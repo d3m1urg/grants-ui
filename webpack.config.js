@@ -59,6 +59,7 @@ module.exports = {
   devServer: {
     contentBase: path.resolve(__dirname, 'build'),
     inline: true,
+    historyApiFallback: true,
   },
   plugins: [
     new ExtractTextPlugin('[contenthash].css'),

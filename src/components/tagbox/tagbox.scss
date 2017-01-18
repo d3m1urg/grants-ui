@@ -16,10 +16,11 @@ $tag-marked: #ff0000;
     align-items: center;
     align-content: flex-start;
     min-height: 3.5rem;
+    min-width: 100%;
+    margin-top: 20px;
   }
 
   &-input-container {
-    @extend .tagbox-internal;
     flex: 2 0 15%;
   }
 

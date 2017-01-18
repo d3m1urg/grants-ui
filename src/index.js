@@ -8,7 +8,7 @@ import { trieducer } from './reducers/composed-reducer';
 
 // import 'flexboxgrid/dist/flexboxgrid.css';
 
-import AppContainer from './components/app-container';
+import AppContainer from './containers/app/connector';
 
 injectTapEventPlugin();
 

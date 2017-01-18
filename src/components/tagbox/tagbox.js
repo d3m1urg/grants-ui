@@ -55,15 +55,18 @@ export default class Tagbox extends React.Component {
   onNewRequest(request, index) {
     if (index >= 0) {
       const updSelectedTags = [...this.state.selectedTags, index];
-      this.setState({ selectedTags: updSelectedTags, currentInput: '', error: '', markedForDelete: false, openMenu: false });
+      this.setState({ selectedTags: updSelectedTags, currentInput: '', error: '', markedForDelete: false, openMenu: false }, () => {
+        this.props.onTagsChanged(this.state.selectedTags.map(item => this.props.dataSource[item]));
+      });
       if (this.inputField) {
         this.inputField.focus();
       }
       return;
     }
     const foundIndex = this.props.dataSource.findIndex(item => item[this.props.dataSourceConfig.text] === request);
-    if (foundIndex >= 0) {
-      this.onNewRequest(this.props.dataSource[foundIndex], foundIndex);
+    if (foundIndex >= 0 || this.props.arbitraryInput) {
+      const tag = foundIndex >= 0 ? this.props.dataSource[foundIndex] : { tagValue: request, tagName: request };
+      this.onNewRequest(tag, foundIndex);
     } else {
       this.setState({ error: 'Invalid input' });
     }
@@ -76,11 +79,12 @@ export default class Tagbox extends React.Component {
   removeTag(id) {
     const selectedTags = [...this.state.selectedTags];
     selectedTags.splice(id, 1);
-    this.setState({ selectedTags });
+    this.setState({ selectedTags, markedForDelete: false }, () => {
+      this.props.onTagsChanged(this.state.selectedTags.map(item => this.props.dataSource[item]));
+    });
   }
 
   onRemoveTag(id) {
-    this.setState({ markedForDelete: false });
     this.removeTag(id);
     if (this.inputField) {
       this.inputField.focus();
@@ -114,6 +118,7 @@ export default class Tagbox extends React.Component {
             menuCloseDelay={0}
             searchText={this.state.currentInput}
             errorText={this.state.error}
+            hintText="Type rule name"
             fullWidth
             ref={(elem) => { this.inputField = elem ? elem.refs.searchTextField : null; }} />
         </div>
@@ -132,4 +137,6 @@ Tagbox.defaultProps = {
   selectedTags: [],
   markedForDelete: false,
   openMenu: false,
+  onTagsChanged: () => {},
+  arbitraryInput: false,
 };
